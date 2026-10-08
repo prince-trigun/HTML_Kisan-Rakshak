@@ -6,7 +6,7 @@ import os
 
 app = FastAPI(
     title="KisanRakshak AI API",
-    description="Backend service for crop leaf disease detection and smart agricultural advisory.",
+    description="A Non-Syllabus Project (NSP) by B.Tech CSE (R) D-2 | Poornima College of Engineering",
     version="1.0.0"
 )
 
@@ -21,34 +21,40 @@ app.add_middleware(
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+EXPERT_HELPLINE = "1800-180-1551"
+
 DISEASE_ADVISORY = {
     "Tomato Early Blight": {
         "crop": "Tomato",
         "severity": "Moderate to High",
         "symptoms": "Dark brown spots with concentric rings on older leaves.",
         "causes": "Fungal pathogen Alternaria solani, thrives in warm, humid conditions.",
-        "treatment": "Apply copper-based fungicides, remove infected lower leaves, and ensure proper plant spacing."
+        "treatment": "Apply copper-based fungicides, remove infected lower leaves, and ensure proper plant spacing.",
+        "helpline": EXPERT_HELPLINE
     },
     "Potato Late Blight": {
         "crop": "Potato",
         "severity": "Critical",
         "symptoms": "Water-soaked dark lesions on leaves and stems, turning brown/black rapidly.",
         "causes": "Oomycete Phytophthora infestans, favored by wet, cool weather.",
-        "treatment": "Use certified disease-free seed tubers, apply recommended fungicides, and destroy infected crops immediately."
+        "treatment": "Use certified disease-free seed tubers, apply recommended fungicides, and destroy infected crops immediately.",
+        "helpline": EXPERT_HELPLINE
     },
     "Rice Blast": {
         "crop": "Rice",
         "severity": "High",
         "symptoms": "Spindle-shaped spots with gray centers on leaves.",
         "causes": "Fungal pathogen Magnaporthe oryzae, aggravated by excessive nitrogen fertilization.",
-        "treatment": "Avoid excess nitrogen, maintain optimal water levels in fields, and use tricyclazole fungicide."
+        "treatment": "Avoid excess nitrogen, maintain optimal water levels in fields, and use tricyclazole fungicide.",
+        "helpline": EXPERT_HELPLINE
     },
     "Healthy Crop": {
         "crop": "General",
         "severity": "None",
         "symptoms": "Vibrant green color, smooth texture, no visible spots or lesions.",
         "causes": "Optimal nutrients, adequate watering, and good pest management.",
-        "treatment": "Continue regular monitoring, maintain balanced fertilization, and follow good irrigation practices."
+        "treatment": "Continue regular monitoring, maintain balanced fertilization, and follow good irrigation practices.",
+        "helpline": EXPERT_HELPLINE
     }
 }
 
@@ -61,12 +67,16 @@ class PredictionResponse(BaseModel):
     symptoms: str
     causes: str
     treatment: str
+    expert_helpline: str
+    project_info: str
 
 @app.get("/")
 def read_root():
     return {
         "status": "online",
         "app": "KisanRakshak AI",
+        "project": "A Non-Syllabus Project (NSP) by B.Tech CSE (R) D-2 | Poornima College of Engineering",
+        "expert_helpline": EXPERT_HELPLINE,
         "message": "Crop leaf disease detection API is running successfully."
     }
 
@@ -95,7 +105,9 @@ async def predict_disease(file: UploadFile = File(...)):
             severity=details["severity"],
             symptoms=details["symptoms"],
             causes=details["causes"],
-            treatment=details["treatment"]
+            treatment=details["treatment"],
+            expert_helpline=EXPERT_HELPLINE,
+            project_info="A Non-Syllabus Project (NSP) by B.Tech CSE (R) D-2 | Poornima College of Engineering"
         )
         
     except Exception as e:
@@ -109,5 +121,6 @@ async def predict_disease(file: UploadFile = File(...)):
 def get_supported_diseases():
     return {
         "supported_diseases": list(DISEASE_ADVISORY.keys()),
-        "total_categories": len(DISEASE_ADVISORY)
+        "total_categories": len(DISEASE_ADVISORY),
+        "expert_helpline": EXPERT_HELPLINE
     }
